@@ -42,8 +42,8 @@ async function fetchDailyFootballMatches() {
 function findLaLigaMatches(matchesData) {
   const laLigaId = process.env.LALIGA_ID;
   const allLeagues = matchesData.response;
+  const laLigaMatches = allLeagues.find((league) => league.id === laLigaId);
 
-  const laLigaMatches = allLeagues.find((league) => (league.id = laLigaId));
   return laLigaMatches;
 }
 
@@ -72,6 +72,12 @@ function createTeamLogoUrl(teamId) {
 async function getLaLigaMatches() {
   const allMatches = await fetchDailyFootballMatches();
   const laLigaMatches = findLaLigaMatches(allMatches);
+
+  if (!laLigaMatches) {
+    console.log("We have not found any La Liga matches today.");
+    return [];
+  }
+
   const formattedMatches = formatMatchDetails(laLigaMatches);
 
   return formattedMatches;
