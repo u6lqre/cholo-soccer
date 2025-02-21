@@ -47,11 +47,34 @@ function findLaLigaMatches(matchesData) {
   return laLigaMatches;
 }
 
+function formatMatchDetails(matches) {
+  const formattedMatches = matches.map((match) => ({
+    id: match.id,
+    home: {
+      id: match.home.id,
+      name: match.home.name,
+      logo_url: createTeamLogoUrl(match.home.id),
+    },
+    away: {
+      id: match.away.id,
+      name: match.away.name,
+      logo_url: createTeamLogoUrl(match.away.id),
+    },
+  }));
+
+  return formattedMatches;
+}
+
+function createTeamLogoUrl(teamId) {
+  return `https://images.fotmob.com/image_resources/logo/teamlogo/${teamId}_large.png`;
+}
+
 async function getLaLigaMatches() {
   const allMatches = await fetchDailyFootballMatches();
   const laLigaMatches = findLaLigaMatches(allMatches);
+  const formattedMatches = formatMatchDetails(laLigaMatches);
 
-  return laLigaMatches;
+  return formattedMatches;
 }
 
 console.log(getLaLigaMatches());
