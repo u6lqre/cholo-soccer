@@ -2,8 +2,8 @@ import dotenv from "dotenv";
 import process from "process";
 dotenv.config();
 
-const baseUrl = process.env.X_RAPIDAPI_BASE_URL;
-const options = {
+const apiBaseUrl = process.env.X_RAPIDAPI_BASE_URL;
+const apiRequestOptions = {
   method: "GET",
   headers: {
     "x-rapidapi-key": process.env.X_RAPIDAPI_KEY,
@@ -11,47 +11,47 @@ const options = {
   },
 };
 
-function getFormattedDate() {
-  const date = new Date();
-  const year = date.getFullYear();
-  const month = (date.getMonth() + 1).toString().padStart(2, "0");
-  const day = date.getDate().toString().padStart(2, "0");
+function getCurrentDateFormatted() {
+  const currentDate = new Date();
+  const year = currentDate.getFullYear();
+  const month = (currentDate.getMonth() + 1).toString().padStart(2, "0");
+  const day = currentDate.getDate().toString().padStart(2, "0");
 
   return `${year}${month}${day}`;
 }
 
-async function fetchMatches() {
+async function fetchDailyFootballMatches() {
   try {
-    const url = `${baseUrl}/football-get-matches-by-date-and-league?date=${getFormattedDate()}`;
+    const apiEndpoint = `${apiBaseUrl}/football-get-matches-by-date-and-league?date=${getCurrentDateFormatted()}`;
 
-    console.log(`${getFormattedDate()}: fetching matches`);
+    console.log(`${getCurrentDateFormatted()}: Fetching football matches`);
 
-    const response = await fetch(url, options);
+    const apiResponse = await fetch(apiEndpoint, apiRequestOptions);
 
-    if (!response.ok) {
-      throw new Error(`Error fetching matches: ${response.status}`);
+    if (!apiResponse.ok) {
+      throw new Error(`Error fetching matches: ${apiResponse.status}`);
     }
 
-    const data = await response.json();
-    return data;
+    const matchesData = await apiResponse.json();
+    return matchesData;
   } catch (error) {
     console.error(error);
   }
 }
 
-function filterLeagues(data) {
+function findLaLigaMatches(matchesData) {
   const laLigaId = process.env.LALIGA_ID;
-  const array = data.response;
+  const allLeagues = matchesData.response;
 
-  const filteredLeagues = array.find((l) => (l.id = laLigaId));
-  return filteredLeagues;
+  const laLigaMatches = allLeagues.find((league) => (league.id = laLigaId));
+  return laLigaMatches;
 }
 
-async function getMatches() {
-  const data = await fetchMatches();
-  const filteredLeagues = filterLeagues(data);
+async function getLaLigaMatches() {
+  const allMatches = await fetchDailyFootballMatches();
+  const laLigaMatches = findLaLigaMatches(allMatches);
 
-  return filteredLeagues;
+  return laLigaMatches;
 }
 
-console.log(getMatches());
+console.log(getLaLigaMatches());
