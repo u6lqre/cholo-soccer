@@ -83,4 +83,4 @@ async function getLaLigaMatches() {
   return formattedMatches;
 }
 
-console.log(await getLaLigaMatches());
+export { getLaLigaMatches };
