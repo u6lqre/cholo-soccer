@@ -24,7 +24,7 @@ async function fetchDailyFootballMatches() {
   try {
     const apiEndpoint = `${apiBaseUrl}/football-get-matches-by-date-and-league?date=${getCurrentDateFormatted()}`;
 
-    console.log(`${getCurrentDateFormatted()}: Fetching football matches`);
+    console.log(`Fetching football matches on: ${getCurrentDateFormatted()}`);
 
     const apiResponse = await fetch(apiEndpoint, apiRequestOptions);
 
@@ -42,9 +42,9 @@ async function fetchDailyFootballMatches() {
 function findLaLigaMatches(matchesData) {
   const laLigaId = process.env.LALIGA_ID;
   const allLeagues = matchesData.response;
-  const laLigaMatches = allLeagues.find((league) => league.id === laLigaId);
+  const laLigaData = allLeagues.find((league) => league.id == laLigaId);
 
-  return laLigaMatches;
+  return laLigaData.matches;
 }
 
 function formatMatchDetails(matches) {
@@ -83,4 +83,4 @@ async function getLaLigaMatches() {
   return formattedMatches;
 }
 
-console.log(getLaLigaMatches());
+console.log(await getLaLigaMatches());
