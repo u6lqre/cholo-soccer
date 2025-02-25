@@ -50,6 +50,7 @@ function findLaLigaMatches(matchesData) {
 function formatMatchDetails(matches) {
   const formattedMatches = matches.map((match) => ({
     id: match.id,
+    time: match.time,
     home: {
       id: match.home.id,
       name: match.home.name,
